@@ -6,7 +6,9 @@ use std::fs;
 use config::Config;
 
 
-pub fn grep<'a>(config: Config) -> Result<String, Box<dyn Error>> {
+pub fn grep(config: Config) -> Result<Vec<String>, Box<dyn Error>> {
+    let mut grepped: Vec<String> = vec!();
+
     let contents = fs::read_to_string(config.file_path)?;
 
     let results = if config.ignore_case {
@@ -16,10 +18,11 @@ pub fn grep<'a>(config: Config) -> Result<String, Box<dyn Error>> {
     };
 
     for line in &results {
-        println!("{line}");
+        let stringfied = line.to_string();
+        grepped.push(stringfied);
     }
 
-    Ok(results[0].to_string())
+    Ok(grepped)
 }
 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
